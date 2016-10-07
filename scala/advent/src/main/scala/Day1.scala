@@ -33,11 +33,8 @@ object Day1 {
   def EnterBasement(s: String): Int = {
     helper(0,0,s)
   }
-}
 
-
-object Main {
-  def main(args: Array[String]) = {
+  def run() {
     val stream = getClass.getResourceAsStream("/day1.txt")
     val source = Source.fromInputStream(stream)
     val parens: String = try source.mkString.trim finally source.close()
@@ -47,3 +44,5 @@ object Main {
     println("Position of hitting basement: " + position) // 1771 (Quite big!)
   }
 }
+
+
