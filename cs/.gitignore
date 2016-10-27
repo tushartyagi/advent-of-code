@@ -316,3 +316,11 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
+
+
+*.swp
+*.*~
+bin/
+obj/
+project.lock.json
+.DS_Store
