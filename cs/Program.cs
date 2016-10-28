@@ -8,7 +8,7 @@ namespace ConsoleApplication
         public static void Main(string[] args)
         {
             var santa = new AdventCoinMining(); 
-            AdventCoinMining.RunPartA();
+            AdventCoinMining.RunPartB();
         
         }
     }
