@@ -34,6 +34,7 @@ public class TestDay4 {
     }
 
     [Test]
+    [Ignore("Takes too much time")]
     public void It_Should_Generate_Correct_Mining_Number_1() {
         var secretKey = "abcdef";
         var answer = advent.GetCorrectNumber(secretKey, MiningHelper.StartsWithFiveZeros);
@@ -42,6 +43,7 @@ public class TestDay4 {
     }
 
     [Test]
+    [Ignore("Takes too much time")]
     public void It_Should_Generate_Correct_Mining_Number_2() {
         var secretKey = "pqrstuv";
         var answer = advent.GetCorrectNumber(secretKey, MiningHelper.StartsWithFiveZeros);
