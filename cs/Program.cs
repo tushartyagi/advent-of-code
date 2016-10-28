@@ -1,5 +1,5 @@
 ﻿using System;
-using AdventOfCode.Day5;
+using AdventOfCode.Day6;
 
 namespace ConsoleApplication
 {
@@ -7,7 +7,9 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            NiceOrNaughty.RunPartB();
+            Grid grid = new Grid(10,10);
+            var instruction = "turn on 0,0 through 999,999";
+            var output = grid.parseInstruction(instruction);
         
         }
     }
