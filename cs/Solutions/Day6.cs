@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Day6 {
@@ -43,6 +44,12 @@ namespace AdventOfCode.Day6 {
             }
         }
 
+        public int NumberLit { 
+            get {
+                return _lit;
+            } 
+        }
+
         public Grid(int row, int col) {
             // Everything's inits to zero in the grid, therefore every light is non-lit
             _grid = new int[row, col];
@@ -55,7 +62,10 @@ namespace AdventOfCode.Day6 {
                 {
                     for (int y = @from.Y; y <= to.Y; y++)
                     {
-                        _grid[x,y] = 1;
+                        if (_grid[x, y] == 0) {
+                            _grid[x,y] = 1;
+                            _lit += 1;
+                        }
                     }
                 }
 
@@ -65,7 +75,10 @@ namespace AdventOfCode.Day6 {
                 {
                     for (int y = @from.Y; y <= to.Y; y++)
                     {
-                        _grid[x,y] = 0;
+                        if (_grid[x,y] == 1) {
+                            _grid[x,y] = 0;
+                            _lit -= 1;
+                        }
                     }
                 }
             }
@@ -74,13 +87,16 @@ namespace AdventOfCode.Day6 {
                 {
                     for (int y = @from.Y; y <= to.Y; y++)
                     {
+                        if (_grid[x, y] == 0) _lit += 1;
+                        else _lit -= 1;
+
                         _grid[x,y] ^= 1;
                     }
                 }
             }
         }
 
-        public Instruction parseInstruction(string instruction) {
+        public Instruction ParseInstruction(string instruction) {
         
             var pattern = @"(\d+),(\d+)[a-z\s]*(\d+),(\d+)";
             var r = Regex.Match(instruction, pattern);
@@ -106,6 +122,19 @@ namespace AdventOfCode.Day6 {
             }
 
             throw new InvalidOperationException();
+        }
+
+        public static void Run() {
+            Grid g = new Grid(1000,1000);
+
+            using (StreamReader sr = new StreamReader(File.Open(@".\Input\Day6.txt", FileMode.Open))) {
+                for (var line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
+                    var instruction = g.ParseInstruction(line.Trim());
+                    g.UpdateState(instruction.State, instruction.From, instruction.To);
+                }
+
+                System.Console.WriteLine("The number of lit bulbs are: {0}", g.NumberLit);
+            }
         }
     }
 

@@ -14,7 +14,7 @@ public class TestDay6 {
     [Test]
     public void It_Should_Parse_Instructions_Correctly() {
         var instruction = "turn on 0,0 through 999,999";
-        var output = grid.parseInstruction(instruction);
+        var output = grid.ParseInstruction(instruction);
 
         // Poor man's test since I have not implemented 
         // equality comparer
@@ -46,6 +46,8 @@ public class TestDay6 {
                 Assert.AreEqual(0, grid[j, i]);
             }
         }
+
+        Assert.AreEqual(9, grid.NumberLit);
     }
 
     [Test]
@@ -69,6 +71,8 @@ public class TestDay6 {
                 Assert.AreEqual(1, grid[j, i]);
             }
         }
+
+        Assert.AreEqual(16, grid.NumberLit);
     }
 
     [Test]
@@ -93,6 +97,8 @@ public class TestDay6 {
                 Assert.AreEqual(0, grid[j, i]);
             }
         }
+
+        Assert.AreEqual(9, grid.NumberLit);
     }
 
 }
