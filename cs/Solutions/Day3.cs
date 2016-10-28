@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace AdventOfCode.Day3 {
@@ -59,9 +60,12 @@ namespace AdventOfCode.Day3 {
             } 
         }
 
+        // Santa starts from here
+        private House _seed = new House(0,0);
+
         public SantaGiftDistribution() {
             // Seed the value with the starting position
-            _houses = new HashSet<House>(new HouseEqualityComparer()){new House(0, 0)};
+            _houses = new HashSet<House>(new HouseEqualityComparer()){_seed};
 
         }
 
@@ -76,16 +80,43 @@ namespace AdventOfCode.Day3 {
                     return current.Up(); 
                 case 'v':
                     return current.Down();
+                case '\r':  // Windows!
+                case '\n':
+                    return current;
                 default:
                     throw new InvalidOperationException("Invalid move");
             }
         }
 
-        public void MoveHouses(House current, string movements) {
-            // Iterate movements and update the current value of house
-
+        // Starting with the current house, move using the string of 
+        // movements and update _houses
+        public void Move(House start, string movements) {
+            
+            var currentHouse = start;
+            var nextHouse = currentHouse;
+            
+            foreach (var movement in movements)
+            {
+                nextHouse = MoveNext(currentHouse, movement);
+                _houses.Add(nextHouse);
+                currentHouse = nextHouse;
+            }
         }
 
+        public void StartDistribution(string movements) {
+            Move(_seed, movements);
+        }
+
+        public static void Run() {
+        
+            var santa = new SantaGiftDistribution();
+
+            using(StreamReader stream = new StreamReader(File.Open(@".\Input\Day3.txt", FileMode.Open))) {
+                var movements = stream.ReadToEnd().Trim();
+                santa.StartDistribution(movements);
+                System.Console.WriteLine("The number of houses: " + santa.Houses.Count);
+            }        
+        }
     }
 
     

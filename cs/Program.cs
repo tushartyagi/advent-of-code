@@ -1,4 +1,5 @@
 ﻿using System;
+using AdventOfCode.Day3;
 
 namespace ConsoleApplication
 {
@@ -6,7 +7,9 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var santa = new SantaGiftDistribution(); 
+            SantaGiftDistribution.Run();
+        
         }
     }
 }

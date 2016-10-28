@@ -48,10 +48,12 @@ public class Testing_House {
 public class Testing_Movement {
 
     SantaGiftDistribution santa;
+    House startingHouse;
 
     [SetUp]
     public void Init() {
         santa = new SantaGiftDistribution();
+        startingHouse = new House(0, 0);
     }
 
     [Test]
@@ -63,6 +65,21 @@ public class Testing_Movement {
     [Test]
     public void Movement_String_Gives_Correct_Results() {
         var movements = ">";
+        santa.Move(startingHouse, movements);
+        Assert.AreEqual(santa.Houses.Count, 2);
+    }
+
+    [Test]
+    public void Movement_String_Gives_Correct_Results_2() {
+        var movements = "^>v<";
+        santa.Move(startingHouse, movements);
+        Assert.AreEqual(santa.Houses.Count, 4);
+    }
+
+    [Test]
+    public void Movement_String_Gives_Correct_Results_3() {
+        var movements = "^v^v^v^v^v";
+        santa.Move(startingHouse, movements);
         Assert.AreEqual(santa.Houses.Count, 2);
     }
 }
