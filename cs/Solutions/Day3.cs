@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AdventOfCode.ExtensionMethods;
 
 namespace AdventOfCode.Day3 {
 
@@ -49,7 +50,7 @@ namespace AdventOfCode.Day3 {
         }
     }
 
-    public class SantaGiftDistribution
+    public class MovementPlan
     {
 
         private HashSet<House> _houses;
@@ -63,7 +64,7 @@ namespace AdventOfCode.Day3 {
         // Santa starts from here
         private House _seed = new House(0,0);
 
-        public SantaGiftDistribution() {
+        public MovementPlan() {
             // Seed the value with the starting position
             _houses = new HashSet<House>(new HouseEqualityComparer()){_seed};
 
@@ -80,9 +81,6 @@ namespace AdventOfCode.Day3 {
                     return current.Up(); 
                 case 'v':
                     return current.Down();
-                case '\r':  // Windows!
-                case '\n':
-                    return current;
                 default:
                     throw new InvalidOperationException("Invalid move");
             }
@@ -107,14 +105,35 @@ namespace AdventOfCode.Day3 {
             Move(_seed, movements);
         }
 
-        public static void Run() {
+        public static void RunPartA() {
         
-            var santa = new SantaGiftDistribution();
+            var santa = new MovementPlan();
 
             using(StreamReader stream = new StreamReader(File.Open(@".\Input\Day3.txt", FileMode.Open))) {
                 var movements = stream.ReadToEnd().Trim();
                 santa.StartDistribution(movements);
                 System.Console.WriteLine("The number of houses: " + santa.Houses.Count);
+            }        
+        }
+
+        public static void RunPartB() {
+        
+            // Both start at House(0,0)
+            var santa = new MovementPlan();
+            var robo =  new MovementPlan();
+
+            using(StreamReader stream = new StreamReader(File.Open(@".\Input\Day3.txt", FileMode.Open))) {
+                var movements = stream.ReadToEnd().Trim().DivideStringForSantaAndRobo();
+                var santaMovements = movements[0];
+                var roboMovements = movements[1];
+                santa.StartDistribution(santaMovements);
+                robo.StartDistribution(roboMovements);
+
+                // If two HashSets using the same EqualityComparer are Unioned, then I 
+                // should not be passing the equality comparer again! 
+                var totalHouses = santa.Houses.Union(robo.Houses, new HouseEqualityComparer());
+
+                System.Console.WriteLine("The number of houses: " + totalHouses.Count());
             }        
         }
     }

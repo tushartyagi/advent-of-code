@@ -7,8 +7,8 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            var santa = new SantaGiftDistribution(); 
-            SantaGiftDistribution.Run();
+            var santa = new MovementPlan(); 
+            MovementPlan.RunPartB();
         
         }
     }
