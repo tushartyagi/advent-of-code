@@ -1,5 +1,5 @@
 ﻿using System;
-using AdventOfCode.Day3;
+using AdventOfCode.Day4;
 
 namespace ConsoleApplication
 {
@@ -7,8 +7,8 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            var santa = new MovementPlan(); 
-            MovementPlan.RunPartB();
+            var santa = new AdventCoinMining(); 
+            AdventCoinMining.RunPartA();
         
         }
     }
