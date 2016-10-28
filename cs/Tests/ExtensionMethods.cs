@@ -9,7 +9,7 @@ namespace AdventOfCode.Tests {
         public void Correctly_Splits_String_Of_Length_Zero() {
             var test = "";
 
-            var partitions = test.DivideStringForSantaAndRobo();
+            var partitions = test.PartitionStringIntoAlternates();
 
             Assert.AreEqual(partitions.Length, 2);
             Assert.AreEqual(partitions[0], "");
@@ -21,7 +21,7 @@ namespace AdventOfCode.Tests {
         public void Correctly_Splits_String_Of_Length_One() {
             var test ="a";
 
-            var partitions = test.DivideStringForSantaAndRobo();
+            var partitions = test.PartitionStringIntoAlternates();
 
             Assert.AreEqual(partitions.Length, 2);
             Assert.AreEqual(partitions[0], "a");
@@ -33,7 +33,7 @@ namespace AdventOfCode.Tests {
         public void Correctly_Splits_String_Of_Even_Length() {
             var test ="abababab";
 
-            var partitions = test.DivideStringForSantaAndRobo();
+            var partitions = test.PartitionStringIntoAlternates();
 
             Assert.AreEqual(partitions.Length, 2);
             Assert.AreEqual(partitions[0], "aaaa");
@@ -45,7 +45,7 @@ namespace AdventOfCode.Tests {
         public void Correctly_Splits_String_Of_Odd_Length() {
             var test ="ababababa";
 
-            var partitions = test.DivideStringForSantaAndRobo();
+            var partitions = test.PartitionStringIntoAlternates();
 
             Assert.AreEqual(partitions.Length, 2);
             Assert.AreEqual(partitions[0], "aaaaa");

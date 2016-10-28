@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace AdventOfCode.ExtensionMethods {
     
     public static class StringExtensions {
-        public static string[] DivideStringForSantaAndRobo(this String input) {
+        public static string[] PartitionStringIntoAlternates(this String input) {
             StringBuilder santaMoves = new StringBuilder(),
                 roboMoves = new StringBuilder();
         

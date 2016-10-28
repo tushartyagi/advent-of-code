@@ -123,7 +123,7 @@ namespace AdventOfCode.Day3 {
             var robo =  new MovementPlan();
 
             using(StreamReader stream = new StreamReader(File.Open(@".\Input\Day3.txt", FileMode.Open))) {
-                var movements = stream.ReadToEnd().Trim().DivideStringForSantaAndRobo();
+                var movements = stream.ReadToEnd().Trim().PartitionStringIntoAlternates();
                 var santaMovements = movements[0];
                 var roboMovements = movements[1];
                 santa.StartDistribution(santaMovements);
