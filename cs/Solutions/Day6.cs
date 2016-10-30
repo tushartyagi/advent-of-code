@@ -56,16 +56,22 @@ namespace AdventOfCode.Day6 {
             _lit = 0;
         }
 
-        public void UpdateState(State state, Pos from, Pos to) {
+        private void ApplyState(Pos from, Pos to) {
+
+           
+        }
+
+        // TODO: Refactor this and the _old method.
+        public void UpdateState_old(State state, Pos from, Pos to) {
             if (state == State.On) {
                 for (int x = @from.X; x <= to.X; x++)
                 {
                     for (int y = @from.Y; y <= to.Y; y++)
-                    {
-                        if (_grid[x, y] == 0) {
+                    {                        
+                       if (_grid[x, y] == 0) {
                             _grid[x,y] = 1;
                             _lit += 1;
-                        }
+                        }                     
                     }
                 }
 
@@ -91,6 +97,44 @@ namespace AdventOfCode.Day6 {
                         else _lit -= 1;
 
                         _grid[x,y] ^= 1;
+                    }
+                }
+            }
+        }
+
+        public void UpdateState_new(State state, Pos from, Pos to) {
+            if (state == State.On) {
+                for (int x = @from.X; x <= to.X; x++)
+                {
+                    for (int y = @from.Y; y <= to.Y; y++)
+                    {
+                        // Always
+                        _grid[x,y] += 1;
+                        _lit += 1;
+                    }
+                }
+
+            } 
+            else if (state == State.Off) {
+                for (int x = @from.X; x <= to.X; x++)
+                {
+                    for (int y = @from.Y; y <= to.Y; y++)
+                    {
+                        // Only if +ve
+                        if (_grid[x,y] > 0) {
+                            _grid[x,y] -= 1;
+                            _lit -= 1;
+                        }
+                    }
+                }
+            }
+            else if (state == State.Toggle) {
+                for (int x = @from.X; x <= to.X; x++)
+                {
+                    for (int y = @from.Y; y <= to.Y; y++)
+                    {
+                        _grid[x,y] += 2;
+                        _lit += 2;
                     }
                 }
             }
@@ -127,10 +171,10 @@ namespace AdventOfCode.Day6 {
         public static void Run() {
             Grid g = new Grid(1000,1000);
 
-            using (StreamReader sr = new StreamReader(File.Open(@".\Input\Day6.txt", FileMode.Open))) {
+            using (StreamReader sr = new StreamReader(File.Open(@"Input/Day6.txt", FileMode.Open))) {
                 for (var line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
                     var instruction = g.ParseInstruction(line.Trim());
-                    g.UpdateState(instruction.State, instruction.From, instruction.To);
+                    g.UpdateState_new(instruction.State, instruction.From, instruction.To);
                 }
 
                 System.Console.WriteLine("The number of lit bulbs are: {0}", g.NumberLit);

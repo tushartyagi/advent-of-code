@@ -1,4 +1,4 @@
-
+G
 # Created by https://www.gitignore.io/api/emacs,omnisharp,csharp
 
 ### Emacs ###
@@ -324,3 +324,8 @@ bin/
 obj/
 project.lock.json
 .DS_Store
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json

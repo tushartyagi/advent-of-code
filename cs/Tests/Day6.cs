@@ -28,7 +28,7 @@ public class TestDay6 {
 
     [Test]
     public void Update_State_ON_Works_Perfectly() {
-        grid.UpdateState(State.On, new Pos(0,0), new Pos(2,2));
+        grid.UpdateState_old(State.On, new Pos(0,0), new Pos(2,2));
 
         for (int i = 0; i < 3; i++)
         {
@@ -52,8 +52,8 @@ public class TestDay6 {
 
     [Test]
     public void Update_State_OFF_Works_Perfectly() {
-        grid.UpdateState(State.On,  new Pos(0,0), new Pos(4,4));
-        grid.UpdateState(State.Off, new Pos(0,0), new Pos(2,2));
+        grid.UpdateState_old(State.On,  new Pos(0,0), new Pos(4,4));
+        grid.UpdateState_old(State.Off, new Pos(0,0), new Pos(2,2));
 
         for (int i = 0; i < 3; i++)
         {
@@ -77,9 +77,9 @@ public class TestDay6 {
 
     [Test]
     public void Update_State_TOGGLE_Works_Perfectly() {
-        grid.UpdateState(State.On,  new Pos(0,0), new Pos(4,4));
-        grid.UpdateState(State.Off, new Pos(0,0), new Pos(2,2));
-        grid.UpdateState(State.Toggle, new Pos(0,0), new Pos(4,4));
+        grid.UpdateState_old(State.On,  new Pos(0,0), new Pos(4,4));
+        grid.UpdateState_old(State.Off, new Pos(0,0), new Pos(2,2));
+        grid.UpdateState_old(State.Toggle, new Pos(0,0), new Pos(4,4));
 
         for (int i = 0; i < 3; i++)
         {
