@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using AdventOfCode.ExtensionMethods;
 
 namespace AdventOfCode.Day7 {
     public abstract class Wire {}
@@ -17,9 +19,16 @@ namespace AdventOfCode.Day7 {
         public abstract int Value { get; }
     }
 
-    public abstract class Operation {}
-    public class Binary : Operation {}
-    public class Unary : Operation {}
+    public enum Operation {
+        And,
+        Or,
+        Not,
+        Lshift,
+        RShift,
+        Assignment
+    }
+
+
 
     public class IntSignal : Signal
     {
@@ -33,12 +42,14 @@ namespace AdventOfCode.Day7 {
     }
 
     public class BinarySignal : Signal{
-        Signal _signal1;
-        Signal _signal2;
-        Operation _op;
+        public Signal Signal1 { get; }
+        public Signal Signal2 { get; }
+        public Operation Operation { get; }
 
         public BinarySignal (Operation op, Signal signal1, Signal signal2) {
-
+            Operation = op;
+            Signal1 = signal1;
+            Signal2 = signal2;
         }
 
         public override int Value { get; }
@@ -46,11 +57,11 @@ namespace AdventOfCode.Day7 {
     }
 
     public class UnarySignal : Signal {
-        Signal _signal;
-        Operation _op;
-
+        public Signal Signal { get; }
+        public Operation Operation { get; }
         public UnarySignal (Operation op, Signal signal) {
-
+            Operation = op;
+            Signal = signal;
         }
 
         public override int Value { get; }
@@ -75,16 +86,66 @@ namespace AdventOfCode.Day7 {
         // as strings just so the evaluation can be deferred. There is a Lazy<T>
         // defined in c# but keeping that for the stage once the system starts 
         // working.
-        private IDictionary<string, string> _environment;
+        private IDictionary<string, Signal> _environment;
 
         public Parser ()
         {
-            _environment = new Dictionary<string, string>();
+            _environment = new Dictionary<string, Signal>();
         }
 
-        public Parser(IDictionary<string, string> environment) {
+        public Parser(IDictionary<string, Signal> environment) {
             _environment = environment;
         }
-    }
 
+        public void Parse(string instruction) {
+            var success = false;
+            var binaryPattern = @"(\w)\s(AND|OR|LSHIFT|RSHIFT)\s(\w)\s->\s(\w)";
+            var unaryPattern  = @"(NOT)\s(\w)\s->\s(\w)";
+            var assignmentPattern = @"(\w+)\s->\s(\w)";
+
+            if (instruction.Contains("AND")) {
+                var r = Regex.Match(instruction, binaryPattern);
+                if (r.Success && r.Groups.Count == 5) {
+                    var leftOperand = r.Groups[1].Value;
+                    var rightOperand = r.Groups[3].Value;
+                    var rhs = r.Groups[4].Value;
+
+                    _environment.Add(rhs, 
+                        new BinarySignal(Operation.And, 
+                                    _environment.Find(leftOperand), 
+                                    _environment.Find(rightOperand)));
+                
+                    success = true;
+                }
+            }
+            else if (instruction.Contains("OR")) {
+
+            }
+            else if (instruction.Contains("NOT")) {
+                
+            }
+            else if (instruction.Contains("LSHIFT")) {
+                
+            }
+            else if (instruction.Contains("RSHIFT")) {
+                
+            }
+            else { // The remaining is the assignment of a signal
+                var r = Regex.Match(instruction, assignmentPattern);
+                if (r.Success && r.Groups.Count == 3) {
+                    var signal = r.Groups[1].Value;
+                    var rhs    = r.Groups[2].Value;
+                    _environment.Add(rhs, 
+                        new UnarySignal(Operation.Assignment, 
+                                    _environment.Find(signal)));
+                
+                    success = true;
+            }
+
+            if (!success) {
+                throw new InvalidOperationException("Cannot parse the instruction");
+            }
+        }
+    }
+    }
 }
