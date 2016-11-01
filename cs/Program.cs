@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using AdventOfCode.Day6;
-using AdventOfCode.Day7a;
+using AdventOfCode.Day7;
 
 namespace ConsoleApplication
 {
@@ -10,6 +8,8 @@ namespace ConsoleApplication
         public static void Main(string[] args)
         {
             Runner.Run();
+            
+        
         }
     }
 }

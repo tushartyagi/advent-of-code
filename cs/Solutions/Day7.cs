@@ -1,151 +1,160 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using AdventOfCode.ExtensionMethods;
 
 namespace AdventOfCode.Day7 {
-    public abstract class Wire {}
-    public interface IOperation {
-        int Evaluate();
-    }
-
-    public abstract class Signal {
-        /* A Signal can be:
-        * An Integar - from 0 to 65535
-        * A Binary Operation - BinOp * Signal * Signal
-        * An Unary Operation - UnOp  * Signal 
-        */
-
-        public abstract int Value { get; }
-    }
-
-    public enum Operation {
-        And,
-        Or,
-        Not,
-        Lshift,
-        RShift,
-        Assignment
-    }
-
-
-
-    public class IntSignal : Signal
-    {
-        public override int Value { get; }
-
-        public IntSignal (int val)
-        {
-            Value = val;
-        }
-
-    }
-
-    public class BinarySignal : Signal{
-        public Signal Signal1 { get; }
-        public Signal Signal2 { get; }
-        public Operation Operation { get; }
-
-        public BinarySignal (Operation op, Signal signal1, Signal signal2) {
-            Operation = op;
-            Signal1 = signal1;
-            Signal2 = signal2;
-        }
-
-        public override int Value { get; }
-
-    }
-
-    public class UnarySignal : Signal {
-        public Signal Signal { get; }
-        public Operation Operation { get; }
-        public UnarySignal (Operation op, Signal signal) {
-            Operation = op;
-            Signal = signal;
-        }
-
-        public override int Value { get; }
-    }
-
-    public class Not : IOperation {
-        private Wire _wire;
-        public Not (Wire x)
-        {
-            _wire = x;
-        }
-
-        public int Evaluate() {
-            
-            return 42;
-        }
-    }
 
     public class Parser {
 
         // In the first iteration of the code, environment stores the values 
-        // as strings just so the evaluation can be deferred. There is a Lazy<T>
-        // defined in c# but keeping that for the stage once the system starts 
-        // working.
-        private IDictionary<string, Signal> _environment;
+        // as strings just so the evaluation can be deferred.
+        private IDictionary<string, string> _environment;
 
         public Parser ()
         {
-            _environment = new Dictionary<string, Signal>();
+            _environment = new Dictionary<string, string>();
         }
 
-        public Parser(IDictionary<string, Signal> environment) {
+        public Parser(IDictionary<string, string> environment) {
             _environment = environment;
         }
 
         public void Parse(string instruction) {
-            var success = false;
-            var binaryPattern = @"(\w)\s(AND|OR|LSHIFT|RSHIFT)\s(\w)\s->\s(\w)";
-            var unaryPattern  = @"(NOT)\s(\w)\s->\s(\w)";
-            var assignmentPattern = @"(\w+)\s->\s(\w)";
 
-            if (instruction.Contains("AND")) {
-                var r = Regex.Match(instruction, binaryPattern);
-                if (r.Success && r.Groups.Count == 5) {
-                    var leftOperand = r.Groups[1].Value;
-                    var rightOperand = r.Groups[3].Value;
-                    var rhs = r.Groups[4].Value;
-
-                    _environment.Add(rhs, 
-                        new BinarySignal(Operation.And, 
-                                    _environment.Find(leftOperand), 
-                                    _environment.Find(rightOperand)));
-                
-                    success = true;
-                }
+            var parts = instruction.Split(new string[]{"->"}, StringSplitOptions.RemoveEmptyEntries);
+            
+            if (parts.Length != 2) {
+                throw new ArgumentException("The instruction provided is malformed");
             }
-            else if (instruction.Contains("OR")) {
-
-            }
-            else if (instruction.Contains("NOT")) {
-                
-            }
-            else if (instruction.Contains("LSHIFT")) {
-                
-            }
-            else if (instruction.Contains("RSHIFT")) {
-                
-            }
-            else { // The remaining is the assignment of a signal
-                var r = Regex.Match(instruction, assignmentPattern);
-                if (r.Success && r.Groups.Count == 3) {
-                    var signal = r.Groups[1].Value;
-                    var rhs    = r.Groups[2].Value;
-                    _environment.Add(rhs, 
-                        new UnarySignal(Operation.Assignment, 
-                                    _environment.Find(signal)));
-                
-                    success = true;
-            }
-
-            if (!success) {
-                throw new InvalidOperationException("Cannot parse the instruction");
+            else {
+                _environment.Add(parts[1].Trim(), parts[0].Trim());
             }
         }
     }
+
+    public class Evaluator {
+        private IDictionary<string, string> _environment;
+
+        public Evaluator ()
+        {
+            _environment = new Dictionary<string, string>();
+        }
+
+        public Evaluator(IDictionary<string, string> environment) {
+            _environment = environment;
+        }
+
+        public int Evaluate(string key) {
+            int result;
+
+            // System.Console.WriteLine("Evaluating {0}.", key);
+            // Base Cases
+            if (int.TryParse(key, out result)) {
+                return result;
+            }
+            var instruction = _environment[key];
+            if (int.TryParse(instruction, out result)) {
+                return result;
+            }
+
+            // Recursive cases
+            else {
+                var binaryPattern = @"(\w+)\s(AND|OR|LSHIFT|RSHIFT)\s(\w+)";
+                var unaryPattern  = @"(NOT)\s(\w+)";
+
+                 if (instruction.Contains("AND")) {
+                    var r = Regex.Match(instruction, binaryPattern);
+                    if (r.Success && r.Groups.Count == 4) {
+                        var leftOperand = r.Groups[1].Value;
+                        var rightOperand = r.Groups[3].Value;
+
+                        var leftSignal = Evaluate(leftOperand);
+                        var rightSignal = Evaluate(rightOperand);
+
+                        var evaluation = leftSignal & rightSignal;
+                        _environment[key] = evaluation.ToString();
+
+                        return evaluation;
+                    }
+                }
+                else if (instruction.Contains("OR")) {
+                    var r = Regex.Match(instruction, binaryPattern);
+                    if (r.Success && r.Groups.Count == 4) {
+                        var leftOperand = r.Groups[1].Value;
+                        var rightOperand = r.Groups[3].Value;
+
+                        var leftSignal = Evaluate(leftOperand);
+                        var rightSignal = Evaluate(rightOperand);
+                        
+                        var evaluation = leftSignal | rightSignal;
+                        _environment[key] = evaluation.ToString();
+
+                        return evaluation;
+                    }
+                }
+                else if (instruction.Contains("NOT")) {
+                    var r = Regex.Match(instruction, unaryPattern);
+                    if (r.Success && r.Groups.Count == 3) {
+                        var leftOperand = r.Groups[2].Value;
+
+                        var leftSignal = Evaluate(leftOperand);
+
+                        var evaluation = (65535 - leftSignal);
+                        _environment[key] = evaluation.ToString();
+
+                        return evaluation;
+                    }
+                }
+                else if (instruction.Contains("LSHIFT")) {
+                    var r = Regex.Match(instruction, binaryPattern);
+                    if (r.Success && r.Groups.Count == 4) {
+                        var leftOperand = r.Groups[1].Value;
+                        var bits = int.Parse(r.Groups[3].Value);
+
+                        var leftSignal = Evaluate(leftOperand);
+                        var evaluation = leftSignal << bits;
+                        _environment[key] = evaluation.ToString();
+
+                        return evaluation;
+
+                    }
+                }
+                else if (instruction.Contains("RSHIFT")) {
+                    var r = Regex.Match(instruction, binaryPattern);
+                    if (r.Success && r.Groups.Count == 4) {
+                        var leftOperand = r.Groups[1].Value;
+                        var bits = int.Parse(r.Groups[3].Value);
+
+                        var leftSignal = Evaluate(leftOperand);
+                        var evaluation =  leftSignal >> bits;
+                        _environment[key] = evaluation.ToString();
+
+                        return evaluation;
+
+                    }
+                }
+
+                throw new KeyNotFoundException();
+            }
+        }
+    }
+    
+    public static class Runner {
+
+        public static void Run() {
+            var env = new Dictionary<string, string>();
+            var p = new Parser(env);
+            var e = new Evaluator(env);
+
+            using (StreamReader sr = new StreamReader(File.Open("Input/Day7.txt", FileMode.Open))) {
+                for(var instruction = sr.ReadLine(); instruction != null; instruction = sr.ReadLine()) {
+                    p.Parse(instruction.Trim());
+                }
+                var a = e.Evaluate("lx");
+                System.Console.WriteLine("The value of 'a is: " + a);
+            }
+        }
     }
 }

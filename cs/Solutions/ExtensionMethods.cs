@@ -23,29 +23,4 @@ namespace AdventOfCode.ExtensionMethods {
             return new string[] { santaMoves.ToString(), roboMoves.ToString()};
         }
     }
-
-    public static class DictionaryExtensions {
-        public static Signal Find(this IDictionary<string, Signal> environment, string key) {
-            // Ideally, Find() should return an IntSignal() after recursively evaluating the 
-            // value of key being passed
-            if (environment.ContainsKey(key)) {
-                var val = environment[key];
-                var valType = val.GetType();
-                if (valType == typeof(IntSignal)) {
-                    return val;
-                }
-                else if (valType == typeof(BinarySignal)) {
-                    // recursively find the operands and apply the operator on it.
-                    var binSignal = val as BinarySignal;
-                    // Apply Operation to recursively-found value of left and right operands.
-
-                }
-                else if (valType == typeof(UnarySignal)) {
-                    var binSignal = val as UnarySignal;
-                }
-            }
-
-            return new IntSignal(42);
-        }
-    }
 }
