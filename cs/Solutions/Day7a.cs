@@ -6,20 +6,20 @@ using AdventOfCode.ExtensionMethods;
 
 namespace AdventOfCode.Day7a {
 
-    public class Wire {
+    public class LazyWire {
         public string Id { get; set; }
         public Lazy<int> Signal { get; private set;}
 
-        public Wire(string id, Lazy<int> signal) {
+        public LazyWire(string id, Lazy<int> signal) {
             Id = id;
             Signal = signal;
         }
 
-        public Wire(string id) {
+        public LazyWire(string id) {
             Id = id;
         }
 
-        public Wire(string id, int signal) {
+        public LazyWire(string id, int signal) {
             Id = id;
             Signal = new Lazy<int>(() => signal);
         }
@@ -31,29 +31,72 @@ namespace AdventOfCode.Day7a {
         public void AddSignal(Lazy<int> signal) {
             Signal = signal;
         }
+        public LazyWire And (LazyWire b, string id) {
+            return new LazyWire(id: id, 
+                        signal: new Lazy<int>(() => Signal.Value & b.Signal.Value));
+        }
+
+        public LazyWire Or (LazyWire b, string id) {
+            return new LazyWire(id: id, 
+                        signal: new Lazy<int>(() => Signal.Value | b.Signal.Value));
+        }
+        
+        public LazyWire LShift (int bits, string id) {
+            return new LazyWire(id: id, 
+                        signal: new Lazy<int>(() => Signal.Value << bits));
+        }
+
+        public LazyWire RShift (int bits, string id) {
+            return new LazyWire(id: id, 
+                        signal: new Lazy<int>(() => Signal.Value >> bits));
+        }
+
+        public LazyWire Not (string id) {
+            return new LazyWire(id: id, 
+                        signal: new Lazy<int>(() => 65535 - Signal.Value));
+        }
+    }
+
+    public class Wire {
+        public string Id { get; set; }
+        public int Signal { get; private set;}
+
+        public Wire(string id) {
+            Id = id;
+        }
+
+        public Wire(string id, int signal) {
+            Id = id;
+            Signal = signal;
+        }
+
+        public void AddSignal(int signal) {
+            Signal = signal;
+        }
+
         public Wire And (Wire b, string id) {
             return new Wire(id: id, 
-                        signal: new Lazy<int>(() => Signal.Value & b.Signal.Value));
+                        signal: Signal & b.Signal);
         }
 
         public Wire Or (Wire b, string id) {
             return new Wire(id: id, 
-                        signal: new Lazy<int>(() => Signal.Value | b.Signal.Value));
+                        signal: Signal | b.Signal);
         }
         
         public Wire LShift (int bits, string id) {
             return new Wire(id: id, 
-                        signal: new Lazy<int>(() => Signal.Value << bits));
+                        signal: Signal << bits);
         }
 
         public Wire RShift (int bits, string id) {
             return new Wire(id: id, 
-                        signal: new Lazy<int>(() => Signal.Value >> bits));
+                        signal: Signal >> bits);
         }
 
         public Wire Not (string id) {
             return new Wire(id: id, 
-                        signal: new Lazy<int>(() => 65535 - Signal.Value));
+                        signal:  65535 - Signal);
         }
     }
 
@@ -102,20 +145,20 @@ namespace AdventOfCode.Day7a {
             _environment = environment;
         }
 
-        public Wire Evaluate(string key) {
+        public int Evaluate(string key) {
             int result;
 
-            // There are cases when the key passed is simply an int/signal
+            System.Console.WriteLine("Evaluating {0}.", key);
+            // Base cases: When the key passed is simply an int/signal
             if (int.TryParse(key, out result)) {
-                return new Wire("result", result);
+                return result;
             }
-
-            // Otherwise, this is a key or another expression which needs 
-            // to be evaluated.
             var instruction = _environment[key];
             if (int.TryParse(instruction, out result)) {
-                return new Wire("result", result);
+                return result;
             }
+
+            // Recursive cases
             else {
                 var binaryPattern = @"(\w+)\s(AND|OR|LSHIFT|RSHIFT)\s(\w+)";
                 var unaryPattern  = @"(NOT)\s(\w+)";
@@ -128,7 +171,8 @@ namespace AdventOfCode.Day7a {
 
                         var leftWire = Evaluate(leftOperand);
                         var rightWire = Evaluate(rightOperand);
-                        return leftWire.And(rightWire, "result");
+
+                        return leftWire & rightWire;
                     }
                 }
                 else if (instruction.Contains("OR")) {
@@ -139,7 +183,7 @@ namespace AdventOfCode.Day7a {
 
                         var leftWire = Evaluate(leftOperand);
                         var rightWire = Evaluate(rightOperand);
-                        return leftWire.Or(rightWire, "result");
+                        return leftWire  | rightWire;
                     }
                 }
                 else if (instruction.Contains("NOT")) {
@@ -148,7 +192,7 @@ namespace AdventOfCode.Day7a {
                         var leftOperand = r.Groups[2].Value;
 
                         var leftWire = Evaluate(leftOperand);
-                        return leftWire.Not("result");
+                        return (65535 - leftWire);
                     }
                 }
                 else if (instruction.Contains("LSHIFT")) {
@@ -158,7 +202,7 @@ namespace AdventOfCode.Day7a {
                         var bits = int.Parse(r.Groups[3].Value);
 
                         var leftWire = Evaluate(leftOperand);
-                        return leftWire.LShift(bits, "result");
+                        return leftWire << bits;
                     }
                 }
                 else if (instruction.Contains("RSHIFT")) {
@@ -168,7 +212,7 @@ namespace AdventOfCode.Day7a {
                         var bits = int.Parse(r.Groups[3].Value);
 
                         var leftWire = Evaluate(leftOperand);
-                        return leftWire.RShift(bits, "result");
+                        return leftWire >> bits;
                     }
                 }
 
@@ -190,7 +234,7 @@ namespace AdventOfCode.Day7a {
                     p.Parse(instruction.Trim());
                 }
                 var a = e.Evaluate("lx");
-                System.Console.WriteLine("The value of 'a is: " + a.Signal.Value);
+                System.Console.WriteLine("The value of 'a is: " + a);
             }
         }
     }
