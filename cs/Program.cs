@@ -1,5 +1,5 @@
 ﻿using System;
-using AdventOfCode.Day6;
+using AdventOfCode.Day7;
 
 namespace ConsoleApplication
 {
@@ -7,7 +7,7 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            Grid.Run();
+            Runner.Run();
             
         
         }
