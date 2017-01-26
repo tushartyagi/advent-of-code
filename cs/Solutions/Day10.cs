@@ -4,7 +4,18 @@ namespace AdventOfCode.Day10
 {
     public class ElvesLookElvesSay 
     {
-        // Need to work on this! Doesn't work :P
+
+        public static string LookAndSay(string number, int iterations)
+        {
+            var current = number;
+            for (int i = 0; i < iterations; i++)
+            {
+                current = ElvesLookElvesSay.LookAndSay(current);                   
+            }
+
+            return current;   
+        }
+
         public static string LookAndSay_Iterative(string number) 
         {
             StringBuilder sb = new StringBuilder();
@@ -61,16 +72,9 @@ namespace AdventOfCode.Day10
 
     public static class Runner {
         public static void Run() {
-            const int iterations = 40;
-            var current = 3113322113.ToString();
+            var saying = ElvesLookElvesSay.LookAndSay(3113322113.ToString(), 50);
 
-            for (int i = 0; i < iterations; i++)
-            {
-                current = ElvesLookElvesSay.LookAndSay(current);
-                //System.Console.WriteLine("At {0}: {1}", i, current);    
-            }
-
-            System.Console.WriteLine("Final answer's length: {0}", current.Length);
+            System.Console.WriteLine("Final answer's length: {0}", saying.Length);
         }
     }
     
