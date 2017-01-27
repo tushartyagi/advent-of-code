@@ -47,7 +47,7 @@ namespace AdventOfCode.Day11
         {
             if (string.IsNullOrEmpty(password))
             {
-                return "a";
+                return string.Empty;
             }
 
             var firstChar = password[0];
