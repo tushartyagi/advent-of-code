@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using AdventOfCode.Day10;
 using NUnit.Framework;
 

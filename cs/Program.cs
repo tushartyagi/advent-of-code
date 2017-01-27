@@ -1,5 +1,5 @@
 ﻿using System;
-using AdventOfCode.Day10;
+using AdventOfCode.Day11;
 
 namespace ConsoleApplication
 {
@@ -7,7 +7,7 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            Runner.Run();
+            Console.WriteLine(CorporatePolicy.NextValidPassword("hxbxxyzz"));
             
         
         }
