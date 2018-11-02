@@ -29,22 +29,22 @@ namespace AdventOfCode.Day3 {
         public int PosX {get; set;}
         public int PosY {get; set;}
 
-        internal House Right()
+        public House Right()
         {
             return new House(PosX + 1, PosY);
         }
 
-        internal House Left()
+        public House Left()
         {
             return new House(PosX - 1, PosY);
         }
 
-        internal House Up()
+        public House Up()
         {
             return new House(PosX, PosY - 1);
         }
 
-        internal House Down()
+        public House Down()
         {
             return new House(PosX, PosY + 1);
         }
