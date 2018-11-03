@@ -14,8 +14,8 @@ namespace ConsoleRunner
             
             using (StreamReader sr = new StreamReader(File.Open(@"../AdventOfCode/Input/Day16.txt", FileMode.Open))) {
                 for (var line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
-                    var (auntIndex, auntArtifact) = FindAuntSue.ParseAuntInfo(line.Trim());
-                    aunts[auntIndex - 1] = FindAuntSue.CreateAuntSue(auntArtifact);
+                    var auntDetails = line.Trim();
+                    aunts.Append(FindAuntSue.CreateAuntSue(auntDetails));
                 }
             }
 
@@ -31,16 +31,17 @@ namespace ConsoleRunner
             // cars: 2
             // perfumes: 1
 
-            var selected = aunts.Where(a => { return a.Children == 3
-                                 || a.Cats == 7
-                                 || a.Samoyeds == 2
-                                 || a.Pomeranians == 3
-                                 || a.Akitas == 0
-                                 || a.Vizslas == 0
-                                 || a.Goldfish == 5
-                                 || a.Trees == 3
-                                 || a.Cars == 2
-                                              || a.Perfumes == 1;});
+            var selected = aunts.Where(a =>
+                                       (a.Children == 3 || a.Children == 0) 
+                                       && (a.Cats == 0 || a.Cats == 7)
+                                       && ( a.Samoyeds == 0 || a.Samoyeds == 2)
+                                       && ( a.Pomeranians == 0 || a.Pomeranians == 3)
+                                       && ( a.Akitas == 0 || a.Akitas == 0)
+                                       && ( a.Vizslas == 0 || a.Vizslas == 0)
+                                       && ( a.Goldfish == 0 || a.Goldfish == 5)
+                                       && ( a.Trees == 0 || a.Trees == 3)
+                                       && ( a.Cars == 0 || a.Cars == 2)
+                                       && ( a.Perfumes == 0 || a.Perfumes == 1));
                                  
             Console.WriteLine(selected.Count());
         }

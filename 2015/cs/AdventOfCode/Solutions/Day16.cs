@@ -10,13 +10,19 @@ namespace AdventOfCode.Day16
     public class FindAuntSue
     {
         public static AuntSue CreateAuntSue(string artifacts) {
+            var re = new Regex(@"Sue (\d+): (.*)");
+            var match = re.Match(artifacts);
+
+            var auntIndex = Convert.ToInt32(match.Groups[1].Value);
+            var auntDetails =  match.Groups[2].Value;
+
             var auntType = typeof(AuntSue);
             var aunt = new AuntSue();
             
-            var re = new Regex(@"(\w+): (\d+)");
+            re = new Regex(@"(\w+): (\d+)");
 
-            foreach(Match match in re.Matches(artifacts)) {
-                var details = match.ToString().Split(':');
+            foreach(Match m in re.Matches(auntDetails)) {
+                var details = m.ToString().Split(':');
                 var artifact = details[0];
                 var count = Convert.ToInt32(details[1]);
 
@@ -29,19 +35,6 @@ namespace AdventOfCode.Day16
         
         static string ToTitleCase(string s) {
             return  System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s);
-        }
-
-        /// <summary>
-        ///  Parse each line of the input file, this is of the form:
-        ///  Sue 1: goldfish: 6, trees: 9, akitas: 0
-        /// </summary>
-        public static (int, string) ParseAuntInfo(string s)
-        {
-            var re = new Regex(@"Sue (\d+): (.*)");
-            var match = re.Match(s);
-            Console.WriteLine("Aunt Value Count: " + match.Groups[2].Value);
-            
-            return (Convert.ToInt32(match.Groups[1].Value), match.Groups[2].Value);            
         }
     }
 

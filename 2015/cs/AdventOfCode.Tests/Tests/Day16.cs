@@ -10,7 +10,7 @@ namespace AdventOfCode.Tests
         [Test]
         public void CreateAuntSueCreatesProperAuntSue1()
         {
-            var artifacts = "goldfish: 6, trees: 9, akitas: 0";
+            var artifacts = "Sue 1: goldfish: 6, trees: 9, akitas: 0";
             var aunt = FindAuntSue.CreateAuntSue(artifacts);
             Assert.AreEqual(aunt.Goldfish, 6);
             Assert.AreEqual(aunt.Trees, 9);
