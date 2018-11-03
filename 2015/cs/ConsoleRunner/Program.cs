@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using AdventOfCode.Day16;
 using System.Text.RegularExpressions;
 using System.Linq;
@@ -10,12 +11,14 @@ namespace ConsoleRunner
     {
         static void Main(string[] args)
         {
-            AuntSue[] aunts = new AuntSue[500];
+            List<AuntSue> aunts = new List<AuntSue>();
             
             using (StreamReader sr = new StreamReader(File.Open(@"../AdventOfCode/Input/Day16.txt", FileMode.Open))) {
                 for (var line = sr.ReadLine(); line != null; line = sr.ReadLine()) {
                     var auntDetails = line.Trim();
-                    aunts.Append(FindAuntSue.CreateAuntSue(auntDetails));
+                    var aunt = FindAuntSue.CreateAuntSue(auntDetails);
+                    Console.WriteLine(aunt);
+                    aunts.Append(aunt);
                 }
             }
 

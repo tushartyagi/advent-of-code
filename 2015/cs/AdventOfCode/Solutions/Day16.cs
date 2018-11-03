@@ -17,8 +17,8 @@ namespace AdventOfCode.Day16
             var auntDetails =  match.Groups[2].Value;
 
             var auntType = typeof(AuntSue);
-            var aunt = new AuntSue();
-            
+            var aunt = new AuntSue { Id = auntIndex };
+
             re = new Regex(@"(\w+): (\d+)");
 
             foreach(Match m in re.Matches(auntDetails)) {
@@ -40,6 +40,7 @@ namespace AdventOfCode.Day16
 
     public class AuntSue
     {
+        public int Id { get; set; } = 0;
         public int Children { get; set;  } = 0;
         public int Cats { get; set; } = 0;
         public int Samoyeds { get; set; } = 0;
