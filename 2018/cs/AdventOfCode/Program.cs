@@ -10,7 +10,7 @@ namespace AdventOfCode
             var inputPath = "inputs/1.txt";
             var solution1 = new Solution1();
 
-            var answer = solution1.ParseStates(inputPath);
+            var answer = solution1.SolveForRepeatedFrequencies(inputPath);
             Console.WriteLine(answer);
         }
     }

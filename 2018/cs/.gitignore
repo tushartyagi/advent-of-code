@@ -553,3 +553,5 @@ flycheck_*.el
 # Local History for Visual Studio
 
 # End of https://www.gitignore.io/api/emacs,csharp,visualstudio
+
+.vscode/
