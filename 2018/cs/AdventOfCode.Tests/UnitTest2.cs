@@ -32,6 +32,23 @@ namespace AdventOfCode.Tests
             var (two, three) = solution2.HasTwoAndThreeCount(input);
             Assert.Equal((two, three), expected);
         }
+
+        [Fact]
+        public void GetBoxIdsReturnsPositionForBoxesWhichDiffBy1() {
+            var input = new List<string> {
+                "abcde",
+                "fghij",
+                "klmno",
+                "pqrst",
+                "fguij",
+                "axcye",
+                "wvxyz",
+            };
+            var expected = (1, 4);
+            var actual = solution2.GetBoxIds(input);
+            Assert.Equal(expected, actual);
+        }
+            
     }
     
 }

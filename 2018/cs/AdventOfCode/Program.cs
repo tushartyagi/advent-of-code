@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AdventOfCode.Solutions;
 
 namespace AdventOfCode
@@ -7,11 +8,13 @@ namespace AdventOfCode
     {
         static void Main(string[] args)
         {
-            var inputPath = "inputs/1.txt";
-            var solution1 = new Solution1();
+            var inputPath = "inputs/2.txt";
+            var solution = new Solution2();
 
-            var answer = solution1.SolveForRepeatedFrequencies(inputPath);
-            Console.WriteLine(answer);
+            var checksum = solution.FindBoxesWhichDiffBy1(inputPath);
+            Console.WriteLine(checksum);
+
+            
         }
     }
 }
