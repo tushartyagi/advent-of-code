@@ -63,25 +63,38 @@ namespace AdventOfCode.Solutions
             }
         }
 
-        public int SolvePart1()
+        private int SolvePart1()
         {
             Setup();
 
-            int maxDuration = _guardsInfo.Max(g => g.Value.TotalDuration);
-            var mostSleepyGuard = _guardsInfo.First(guardInfo => guardInfo.Value.TotalDuration == maxDuration);
+            // Find the guard that has the most minutes asleep. What minute does that guard spend asleep the most?
+            // What is the ID of the guard you chose multiplied by the minute you chose? 
+            int maxOverallSleepDuration = _guardsInfo.Max(g => g.Value.TotalDuration);
+            var mostSleepyGuard = _guardsInfo.First(guardInfo => guardInfo.Value.TotalDuration == maxOverallSleepDuration);
             var mostSleepyMinute = MostSleptMinute(mostSleepyGuard.Value);
 
             return mostSleepyGuard.Value.Id * mostSleepyMinute;
         }
 
-        public int SolvePart2()
+        private int SolvePart2()
         {
+            // Of all guards, which guard is most frequently asleep on the same minute?
+            // What is the ID of the guard you chose multiplied by the minute you chose? 
             var maxDurations = _guardsInfo.Select(g => (g.Key, g.Value.Minutes.Max()));
             var maxDuration = maxDurations.Max(duration => duration.Item2);
             var mostAccurateSleeper = maxDurations.First(duration => duration.Item2 == maxDuration);
             var mostSleptMinute = MostSleptMinute(_guardsInfo[mostAccurateSleeper.Item1]);
             return mostAccurateSleeper.Item1 * mostSleptMinute;
             
+        }
+
+        public void Solve()
+        {
+            var answer1 = SolvePart1();
+            var answer2 = SolvePart2();
+
+            Console.WriteLine($"Answer for part1: {answer1}");
+            Console.WriteLine($"Answer for part2: {answer2}");
         }
 
         public class Guard
