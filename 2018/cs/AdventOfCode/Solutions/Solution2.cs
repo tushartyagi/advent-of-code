@@ -50,6 +50,32 @@ namespace AdventOfCode.Solutions
                 }
             }
         }
+
+        public (int, int) GetBoxIds(IEnumerable<string> ids) {
+            var idList = ids.ToList();
+            var idLength = idList[0].Length;
+
+            for(var i = 0; i < idList.Count(); i++) {
+                for(var j = i + 1; j < idList.Count(); j++) {
+                    int diff = 0;                    
+                    for(var c = 0; c < idLength; c++) {
+                        if (diff > 1) break;
+                        if (idList[i][c] != idList[j][c]) diff++;
+                    }
+                    if (diff == 1)
+                        return (i, j);
+                }
+            }
+            return (-1, -1);            
+        }
+
+        public string FindBoxesWhichDiffBy1(string inputPath) {
+            var ids = ReadIds(inputPath);
+            var (firstPos, secondPos) = GetBoxIds(ids);
+            var (first, second) = (ids.ToList()[firstPos], ids.ToList()[secondPos]);
+
+            return new String(first.Intersect(second).ToArray());
+        }
     }
     
 

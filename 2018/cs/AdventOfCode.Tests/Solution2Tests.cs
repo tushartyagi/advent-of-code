@@ -33,5 +33,4 @@ namespace AdventOfCode.Tests
             Assert.Equal((two, three), expected);
         }
     }
-    
 }
