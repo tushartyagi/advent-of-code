@@ -30,11 +30,11 @@ namespace AdventOfCode
 
             Stopwatch s = new Stopwatch();
             s.Start();
-            var solution = new Solution1();
-            var answer = solution.SolveForRepeatedFrequencies("inputs/1.txt");
+            var solution = new Solution5();
+            solution.Solve();
             s.Stop();
-            Console.WriteLine(answer);
-            Console.WriteLine(s.Elapsed);
+            Console.WriteLine("Time taken: {0}:{1}.{2}", s.Elapsed.Minutes, s.Elapsed.Seconds, s.Elapsed.Milliseconds);
+            
         }
 
         
