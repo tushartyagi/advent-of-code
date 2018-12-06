@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text;
 using AdventOfCode.Utils;
@@ -57,14 +57,10 @@ namespace AdventOfCode.Solutions
 
         private int RemoveAndReact(char c) {
             int size = 0;
-            var polymer = new StringBuilder(_polymerString);
+            char upper = (char)(c - 32);
+            string pattern = $"[{c}{upper}]";
 
-            for (var i = 0; i < polymer.Length; ++i) {
-                if (polymer[i] == c || (polymer[i] == c - 32) /* a - A == 32 */) {
-                    polymer.Remove(i, 1);
-                    i--; // Check this index again. 
-                }
-            }
+            string polymer = Regex.Replace(_polymerString, pattern, "");
 
             size = React(polymer);
             return size;
