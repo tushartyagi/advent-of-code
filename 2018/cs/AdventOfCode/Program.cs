@@ -30,8 +30,8 @@ namespace AdventOfCode
 
             Stopwatch s = new Stopwatch();
             s.Start();
-            var solution = new Solution5();
-            solution.Solve2();
+            var solution = new Solution7();
+            solution.Solve();
             s.Stop();
             Console.WriteLine("Time taken: {0}:{1}.{2}", s.Elapsed.Minutes, s.Elapsed.Seconds, s.Elapsed.Milliseconds);
             

@@ -17,7 +17,9 @@ namespace AdventOfCode.Utils
         public static IEnumerable<string> ReadLines(int solutionNumber) {
             using (StreamReader s = new StreamReader(File.OpenRead($"inputs/{solutionNumber}.txt")))
             {
-                yield return s.ReadLine();
+                while(!s.EndOfStream) {
+                    yield return s.ReadLine();
+                }
             }
         }
     }
