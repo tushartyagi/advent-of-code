@@ -9,7 +9,7 @@ namespace AdventOfCode.Solutions
 {
     public class Solution7
     {
-        class State {
+        class State: IComparable<State> {
 
             public State(string name) {
                 Name = name;
@@ -34,6 +34,10 @@ namespace AdventOfCode.Solutions
             public void AddPost(State s) {
                 this.Post.Add(s);
             }
+
+            public int CompareTo(State other) {
+                return this.Name.CompareTo(other.Name);
+            }
         }
         
         IDictionary<string, State> _states = new Dictionary<string, State>();
@@ -42,12 +46,11 @@ namespace AdventOfCode.Solutions
         
         public Solution7() {
             Setup();
-            Solve1();
         }
 
         private void Setup()
         {
-            foreach (var input in  Utils.Utils.ReadLines(7)) {
+            foreach (var input in  Utils.Utils.ReadLines(7, true)) {
                 var matches = r.Match(input);
                 string preKey = matches.Groups["s1"].Value;
                 string postKey = matches.Groups["s2"].Value;
@@ -80,10 +83,37 @@ namespace AdventOfCode.Solutions
         }
 
         public void Solve1() {
-            var sources = _states.Where(k => k.Value.Pre.Count == 0);
-            foreach(var s in sources) {
-                Console.WriteLine(s.ToString());  
+            var sources = _states.Where(k => k.Value.Pre.Count == 0).OrderBy(k => k.Key).ToList();
+            // foreach(var s in sources) {
+            //     Console.WriteLine(s.Value.ToString());  
+            // }
+
+            // This will hold all the values which we have to work in
+            // increasing order of character values.
+            // Also, not using Stdlib's Queue because we need to keep sorting
+            // the elements whenever new element is inserted.
+            var queue = sources;
+
+            while (queue.Count != 0) {
+                var currentElement = queue[0];
+                queue.RemoveAt(0);
+
+                if (currentElement.Value.Done) {
+                    continue;
+                }
+
+                Console.WriteLine(currentElement);
+
+                currentElement.Value.Done = true;
+
+                foreach(var el in  currentElement.Value.Post) {
+                    queue.Add(new KeyValuePair<string, State>(el.Name, el));
+                }
+
+                queue.Sort((x, y) => x.Key.CompareTo(y.Key));
+
             }
+            
             
         }
 
