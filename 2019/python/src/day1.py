@@ -1,7 +1,7 @@
 from src.utils import get_inputs_as_ints
 from functools import reduce
 
-def fuel_requirements_for_module(module_mass):
+def fuel_requirements_for_module(module_mass: int) -> int:
     """
 
     Fuel required to launch a given module is based on its
