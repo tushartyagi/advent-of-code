@@ -21,7 +21,7 @@ def fuel_requirements_for_module(module_mass: int) -> int:
     33583
 
     """
-    return (module_mass // 3) - 2
+    pass
 
 def fuel_requirements_for_module_and_fuel(module_mass: int) -> int:
     """
